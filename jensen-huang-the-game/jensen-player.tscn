@@ -18,6 +18,10 @@
 [ext_resource type="AnimationLibrary" uid="uid://raiyi3fh1ckh" path="res://animations/Rifle Sprint.fbx" id="16_7pn8w"]
 [ext_resource type="AnimationLibrary" uid="uid://b55c86r5gtehp" path="res://animations/Running.fbx" id="17_h8kme"]
 [ext_resource type="AnimationLibrary" uid="uid://guielbg07t8l" path="res://animations/jogging.fbx" id="18_y24qd"]
+[ext_resource type="AnimationLibrary" uid="uid://b0rh6wb0qm5u5" path="res://animations/Rifle Strafe Left.fbx" id="19_strl"]
+[ext_resource type="AnimationLibrary" uid="uid://dquf7osgoq6it" path="res://animations/Rifle Strafe Right.fbx" id="20_strr"]
+[ext_resource type="AnimationLibrary" uid="uid://d26a6eom2la6x" path="res://animations/Rifle Run Backwards.fbx" id="21_runb"]
+[ext_resource type="AnimationLibrary" path="res://animations/Walking.fbx" id="22_walk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lbgts"]
 radius = 0.35
@@ -346,7 +350,7 @@ input_jump = "jump"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=873290071]
-transform = Transform3D(0.99380183, 0.06282119, -0.09171415, -0.0092013525, 0.86867, 0.49530587, 0.11078502, -0.49139196, 0.8638638, 0.4302847, 0.023109913, 0.20171052)
+transform = Transform3D(0.99380183, 0.06282119, -0.091714144, -0.0092013525, 0.86867, 0.49530584, 0.11078502, -0.49139196, 0.8638638, 0.44879195, 0.17913914, 0.40328258)
 
 [node name="Collider" type="CollisionShape3D" parent="." unique_id=1701320797]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9833977, 0)
@@ -449,10 +453,14 @@ libraries/Jump = ExtResource("9_ljk0t")
 "libraries/Rifle Jump" = ExtResource("13_6vq1f")
 "libraries/Rifle Put Away" = ExtResource("14_66wdf")
 "libraries/Rifle Run" = ExtResource("15_uhcna")
+"libraries/Rifle Run Backwards" = ExtResource("21_runb")
 "libraries/Rifle Sprint" = ExtResource("16_7pn8w")
+"libraries/Rifle Strafe Left" = ExtResource("19_strl")
+"libraries/Rifle Strafe Right" = ExtResource("20_strr")
 libraries/Running = ExtResource("17_h8kme")
 libraries/jogging = SubResource("AnimationLibrary_3k1lv")
 "libraries/jogging 2" = ExtResource("18_y24qd")
+libraries/Walking = ExtResource("22_walk")
 
 [node name="LeftElbowPole" type="Marker3D" parent="jensen" unique_id=1640748661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22115943, 1.0108228, 0.26855588)

@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/weapon_pickup.gd" id="1_pick"]
+[ext_resource type="PackedScene" uid="uid://cwvhwcgjxy8hv" path="res://models/plasmapulse-blaster---iota/source/ppb-X.glb" id="2_blst"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pick"]
+radius = 0.8
+
+[node name="WeaponPickup" type="Area3D"]
+script = ExtResource("1_pick")
+
+[node name="Model" parent="." instance=ExtResource("2_blst")]
+transform = Transform3D(0.070556015, 0, 0, 0, 0.070556015, 0, 0, 0, 0.070556015, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_pick")

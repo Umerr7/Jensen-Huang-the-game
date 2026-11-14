@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://blqkpriwb663n" path="res://models/alice.glb" id="2_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://kygdgt0h653g" path="res://models/jensen.glb" id="3_lquwl"]
-[ext_resource type="PackedScene" uid="uid://cwvhwcgjxy8hv" path="res://models/plasmapulse-blaster---iota/source/ppb-X.glb" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://cvufu13da3c5y" path="res://jensen-player.tscn" id="4_7mycd"]
+[ext_resource type="PackedScene" path="res://weapon_pickup.tscn" id="5_pick"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -66,13 +66,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.360569, 0.5, -1.0576499)
 
 [node name="Player" parent="." unique_id=786945605 instance=ExtResource("4_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52875876, 0)
-can_sprint = true
 can_freefly = true
-input_left = "move_left"
-input_right = "move_right"
-input_forward = "move_forward"
-input_back = "move_backward"
-input_jump = "jump"
 
-[node name="Blaster" parent="." unique_id=694268260 instance=ExtResource("4_1bvp3")]
-transform = Transform3D(0.070556015, 0, 0, 0, 0.070556015, 0, 0, 0, 0.070556015, -15.024093, 1.7306318, 2.3718505)
+[node name="WeaponPickup" parent="." unique_id=1979915436 instance=ExtResource("5_pick")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07278025, 1.2439015, -4.9123607)
