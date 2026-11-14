@@ -5,6 +5,8 @@ extends "res://scripts/proto_controller.gd"
 
 
 signal weapon_picked_up
+signal health_changed(current: float, maximum: float)
+signal died
 
 ## The states Jensen can be in. Each one maps to an animation below.
 ## IDLE_UNARMED and WALK are used before he has the blaster; everything else needs it.
@@ -14,6 +16,17 @@ enum State { IDLE_UNARMED, WALK, IDLE, RUN, SPRINT, STRAFE_LEFT, STRAFE_RIGHT, R
 @export var has_weapon : bool = false
 ## Walking speed (m/s) while unarmed. Armed he uses base_speed / sprint_speed.
 @export var walk_speed : float = 2.0
+
+@export_group("Health")
+@export var max_health : float = 100.0
+
+@export_group("EMP Gun")
+## Damage per shot (transistors have 100 health, so 34 = 3 shots).
+@export var shot_damage : float = 34.0
+## Seconds between shots while the mouse is held.
+@export var fire_cooldown : float = 0.25
+## How far the shot reaches (m).
+@export var shot_range : float = 80.0
 
 @export_group("Animations")
 ## Library names exactly as they appear in the AnimationPlayer's library list.
@@ -42,20 +55,28 @@ var state : State = State.IDLE_UNARMED
 var _current_anim : String = ""
 var _run_speed : float          # base_speed as set in the Inspector (armed running speed)
 var _sprint_allowed : bool      # can_sprint as set in the Inspector
+var health : float
+var _fire_cooldown_left : float = 0.0
+var _dead : bool = false
+@onready var camera : Camera3D = $Head/Camera3D
 
 
 func _ready() -> void:
 	super()
+	add_to_group("player")      # enemies look for this group to find their target
+	collision_mask |= 2         # bump into enemies (they live on physics layer 2)
+	health = max_health
 	_run_speed = base_speed
 	_sprint_allowed = can_sprint
 	_apply_weapon_state()
-
+	can_jump = false
 
 ## Call this when Jensen grabs the blaster (the WeaponPickup does this for you).
 func pick_up_weapon() -> void:
 	if has_weapon:
 		return
 	has_weapon = true
+	can_jump = true	
 	_apply_weapon_state()
 	weapon_picked_up.emit()
 
@@ -75,6 +96,34 @@ func _physics_process(delta: float) -> void:
 	super(delta)            # run the normal ProtoController movement first
 	state = _pick_state()
 	_play_for_state(state)
+	_fire_cooldown_left = maxf(_fire_cooldown_left - delta, 0.0)
+	if _wants_to_fire() and _fire_cooldown_left <= 0.0:
+		shoot()
+
+
+## Enemy bolts call this when they hit Jensen.
+func take_damage(amount: float) -> void:
+	if _dead:
+		return
+	health = maxf(health - amount, 0.0)
+	health_changed.emit(health, max_health)
+	if health <= 0.0:
+		_dead = true
+		died.emit()
+		get_tree().reload_current_scene.call_deferred()   # simple jam death: restart the level
+
+
+## Fire the EMP: an instant ray from the middle of the screen. Anything it hits
+## that has take_damage() (the transistors) gets hurt.
+func shoot() -> void:
+	_fire_cooldown_left = fire_cooldown
+	var from := camera.global_position
+	var to := from + -camera.global_basis.z * shot_range
+	var query := PhysicsRayQueryParameters3D.create(from, to, 1 | 2)   # world + enemies
+	query.exclude = [get_rid()]
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit and hit.collider.has_method("take_damage"):
+		hit.collider.take_damage(shot_damage)
 
 
 ## Look at what the body is doing this frame and decide which state that is.
