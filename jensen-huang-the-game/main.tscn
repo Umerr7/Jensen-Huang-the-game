@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://g7ljuaf27qos"]
 
-[ext_resource type="PackedScene" uid="uid://blqkpriwb663n" path="res://models/alice.glb" id="2_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://kygdgt0h653g" path="res://models/jensen.glb" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cvufu13da3c5y" path="res://jensen-player.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" path="res://weapon_pickup.tscn" id="5_pick"]
 [ext_resource type="PackedScene" uid="uid://b8lpeulobih3t" path="res://motherboard_map.scn" id="6_7mycd"]
 [ext_resource type="PackedScene" path="res://TransistorEnemy/transistor_enemy.tscn" id="6_272bh"]
+[ext_resource type="PackedScene" uid="uid://dpqjvpddr3hl5" path="res://enemies/charger_enemy/charger_enemy.tscn" id="7_5vw27"]
+[ext_resource type="PackedScene" uid="uid://cep34bk3wsywe" path="res://enemies/dip_enemy/dip_enemy.tscn" id="8_kek77"]
+[ext_resource type="PackedScene" path="res://alice_npc.tscn" id="9_alice"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -63,18 +65,22 @@ transform = Transform3D(-9.15, 0, 8.742278e-08, 0, 4.9, 0, -7.9991844e-07, 0, -1
 [node name="CSGBox3D9" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1416774738]
 transform = Transform3D(-9.15, 0, 8.742278e-08, 0, 4.9, 0, -7.9991844e-07, 0, -1, 5, 3, -13)
 
-[node name="alice" parent="." unique_id=1284997488 instance=ExtResource("2_1bvp3")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.1556969, 1.4009153, 129.87714)
+[node name="Alice" parent="." unique_id=1284997488 instance=ExtResource("9_alice")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.030285597, 1.3400711, 129.7486)
+max_messages = 4
+death_linger = 1.0
+talk_radius = 12.0
+opening_line = "surprised to see me arent you? you thought you'd find a chinese AI model. "
 
 [node name="jensen" parent="." unique_id=254997866 instance=ExtResource("3_lquwl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.360569, 0.5, -1.0576499)
 
 [node name="Player" parent="." unique_id=786945605 instance=ExtResource("4_7mycd")]
-transform = Transform3D(1.1453475, 0, 0, 0, 1.1453475, 0, 0, 0, 1.1453475, -102.29446, 0.5571524, 144.18576)
+transform = Transform3D(-5.0064727e-08, 0, 1.1453475, 0, 1.1453475, 0, -1.1453475, 0, -5.0064727e-08, -92.741875, 0.8333123, 142.02335)
 can_freefly = true
 
 [node name="WeaponPickup" parent="." unique_id=1979915436 instance=ExtResource("5_pick")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -96.81265, 1.1053102, 142.06183)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -97.576256, 1.1053102, 139.94191)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1377700783]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 159.37311, 0, 139.87395)
@@ -117,3 +123,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.35459, 0.01683861, 133.17
 
 [node name="TransistorEnemy2" parent="." unique_id=974121038 instance=ExtResource("6_272bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.56956, 0.01683861, 145.6531)
+
+[node name="TransistorEnemy3" parent="." unique_id=378720003 instance=ExtResource("6_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -96.22706, 0.01683861, 106.98732)
+
+[node name="TransistorEnemy4" parent="." unique_id=878865423 instance=ExtResource("6_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -84.73138, 0.01683861, 113.543434)
+
+[node name="TransistorEnemy5" parent="." unique_id=1109685346 instance=ExtResource("6_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.997147, 0.01683861, 112.949715)
+
+[node name="TransistorEnemy6" parent="." unique_id=170999703 instance=ExtResource("6_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.755108, 0.01683861, 140.11823)
+
+[node name="ChargerEnemy" parent="." unique_id=687268797 instance=ExtResource("7_5vw27")]
+transform = Transform3D(-0.7108055, 0, -0.70338863, 0, 1, 0, 0.70338863, 0, -0.7108055, -73.67143, 0.016809464, 151.0554)
+
+[node name="DipEnemy" parent="." unique_id=101733732 instance=ExtResource("8_kek77")]
+transform = Transform3D(0.63442826, 0, -0.77298176, 0, 1, 0, 0.77298176, 0, 0.63442826, -49.59943, 0.7271363, 138.05344)
+
+[node name="DipEnemy3" parent="." unique_id=622968955 instance=ExtResource("8_kek77")]
+transform = Transform3D(0.78198177, 0, 0.6233013, 0, 1, 0, -0.6233013, 0, 0.78198177, -23.32697, 0.7271363, 113.867355)
+
+[node name="DipEnemy2" parent="." unique_id=47132160 instance=ExtResource("8_kek77")]
+transform = Transform3D(0.65111125, 0, 0.75898224, 0, 1, 0, -0.75898224, 0, 0.65111125, -73.29578, 0.7271363, 126.118996)

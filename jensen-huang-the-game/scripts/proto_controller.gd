@@ -112,9 +112,11 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, move_speed)
 			velocity.z = move_toward(velocity.z, 0, move_speed)
 	else:
+		# Stop all horizontal movement (the original only cleared x and y, so he kept
+		# sliding along z when frozen); keep y so gravity still works.
 		velocity.x = 0
-		velocity.y = 0
-	
+		velocity.z = 0
+
 	# Use velocity to actually move
 	move_and_slide()
 

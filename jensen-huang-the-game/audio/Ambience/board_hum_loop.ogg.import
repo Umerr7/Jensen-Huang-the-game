@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/board_hum_loop.ogg-b1c2669d0839c58480d45ebf1d
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

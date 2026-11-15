@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cj7csu8k5tygx" path="res://scripts/player.gd" id="1_w0u1o"]
 [ext_resource type="PackedScene" uid="uid://kygdgt0h653g" path="res://models/jensen.glb" id="2_bkoda"]
 [ext_resource type="PackedScene" uid="uid://cwvhwcgjxy8hv" path="res://models/plasmapulse-blaster---iota/source/ppb-X.glb" id="3_tqo1j"]
+[ext_resource type="PackedScene" path="res://ui/lives_hud.tscn" id="30_hud"]
 [ext_resource type="AnimationLibrary" uid="uid://qohfbrp7o1qv" path="res://animations/Backflip.fbx" id="4_f7bie"]
 [ext_resource type="AnimationLibrary" uid="uid://i7hwbc2ofu8" path="res://animations/Firing Rifle.fbx" id="5_y1g78"]
 [ext_resource type="AnimationLibrary" uid="uid://b7orqlyl7nrja" path="res://animations/Firing Rifle 2.fbx" id="6_su4v2"]
@@ -340,6 +341,7 @@ _data = {
 [node name="CharacterBody3D" type="CharacterBody3D" unique_id=786945605]
 script = ExtResource("1_w0u1o")
 can_sprint = true
+sprint_speed = 7.0
 input_left = "move_left"
 input_right = "move_right"
 input_forward = "move_forward"
@@ -426,6 +428,10 @@ transform = Transform3D(0.0046772417, 0.0323113, -0.011744304, -0.034052197, 0.0
 transform = Transform3D(0.9999998, 4.7683716e-07, 2.9802322e-08, -1.6391277e-07, 0.9999996, -1.8626451e-07, -1.4901161e-08, -1.3411045e-07, 1.0000001, -2.6243267, 3.5789986, 1.9456062)
 gizmo_extents = 0.01
 
+[node name="Muzzle" type="Marker3D" parent="jensen/AvatarRoot/GeneralSkeleton/BoneAttachment3D/Blaster"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.97, 3.7, 0)
+gizmo_extents = 0.01
+
 [node name="LeftArmIK" type="TwoBoneIK3D" parent="jensen/AvatarRoot/GeneralSkeleton" index="14" unique_id=922889713]
 setting_count = 1
 settings/0/target_node = NodePath("../BoneAttachment3D/Blaster/LeftHandGrip")
@@ -464,5 +470,7 @@ libraries/jogging = SubResource("AnimationLibrary_3k1lv")
 
 [node name="LeftElbowPole" type="Marker3D" parent="jensen" unique_id=1640748661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22115943, 1.0108228, 0.26855588)
+
+[node name="LivesHUD" parent="." instance=ExtResource("30_hud")]
 
 [editable path="jensen"]

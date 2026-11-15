@@ -1,7 +1,7 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://TransistorEnemy/transistor_enemy.tscn" id="1_enemy"]
-[ext_resource type="PackedScene" path="res://TransistorEnemy/test/dummy_player.tscn" id="2_dummy"]
+[ext_resource type="PackedScene" uid="uid://dhwwymdvspqhh" path="res://TransistorEnemy/test/dummy_player.tscn" id="2_dummy"]
 [ext_resource type="NavigationMesh" path="res://TransistorEnemy/test/enemy_test_navmesh.tres" id="3_navmesh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_test"]

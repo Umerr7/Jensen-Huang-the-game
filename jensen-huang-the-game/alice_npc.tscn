@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/alice_npc.gd" id="1_alice"]
+[ext_resource type="PackedScene" path="res://models/alice.glb" id="2_model"]
+[ext_resource type="Script" path="res://scripts/gemma_client.gd" id="3_gemma"]
+[ext_resource type="PackedScene" path="res://ui/alice_dialogue.tscn" id="4_ui"]
+[ext_resource type="AnimationLibrary" path="res://animations/Idle-female.fbx" id="5_idle"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.75
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_talk"]
+radius = 4.0
+
+[node name="AliceNPC" type="StaticBody3D"]
+collision_layer = 2
+script = ExtResource("1_alice")
+
+[node name="alice" parent="." instance=ExtResource("2_model")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="alice"]
+libraries/Idle-female = ExtResource("5_idle")
+
+[node name="Body" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="TalkZone" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="Shape" type="CollisionShape3D" parent="TalkZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_talk")
+
+[node name="GemmaClient" type="Node" parent="."]
+script = ExtResource("3_gemma")
+
+[node name="AliceDialogue" parent="." instance=ExtResource("4_ui")]
+visible = false

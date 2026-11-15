@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://projectiles/vfx_shot.gd" id="1_shot"]
+[ext_resource type="PackedScene" path="res://addons/pd_projectile_vfx/effects/Magic_Bullet_Cyan.tscn" id="2_fx"]
+
+[node name="PlayerEmpShot" type="Node3D"]
+script = ExtResource("1_shot")
+effect = ExtResource("2_fx")
+speed = 45.0
+damage = 34.0
+max_range = 80.0
+hit_mask = 3

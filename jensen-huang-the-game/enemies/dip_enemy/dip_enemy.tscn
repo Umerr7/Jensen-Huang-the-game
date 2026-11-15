@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cep34bk3wsywe"]
+
+[ext_resource type="Script" uid="uid://cpywt3s1bifut" path="res://scripts/dip_enemy.gd" id="1_enemy"]
+[ext_resource type="PackedScene" uid="uid://iqq5fcisnb25" path="res://enemies/models/Integrated Circuit DIP.glb" id="2_model"]
+[ext_resource type="PackedScene" path="res://projectiles/dip_heavy_shot.tscn" id="3_projectile"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 1.4
+height = 3.28
+
+[node name="DipEnemy" type="CharacterBody3D"]
+collision_layer = 2
+script = ExtResource("1_enemy")
+size_scale = 4.0
+detection_radius = 16.0
+lose_target_radius = 24.0
+return_speed = 6.0
+acceleration = 30.0
+stop_distance = 8.0
+move_range = 10.0
+shuffle_speed = 4.5
+attack_range = 26.0
+projectile_scene = ExtResource("3_projectile")
+projectile_speed = 20.0
+aim_height = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 1.0
+target_desired_distance = 1.4
+height = 3.6
+radius = 1.4
+
+[node name="Visual" type="Node3D" parent="."]
+transform = Transform3D(0, -160, 0, 160, 0, 0, 0, 0, 160, 0, 0.6296, 0)
+
+[node name="Model" parent="Visual" instance=ExtResource("2_model")]
+transform = Transform3D(-0.030138701, 0, 2.3230064, 0, 1, 0, -2.3378823, 0, -0.029946929, 0, 0, 0)
+
+[node name="Muzzle" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.88, -1.5)

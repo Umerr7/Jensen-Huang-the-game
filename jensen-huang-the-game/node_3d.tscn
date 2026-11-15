@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bypvrpgh3hlpd"]
+
+[ext_resource type="PackedScene" uid="uid://cghlnt3n1d6e6" path="res://motherboard_map_reference.scn" id="1_a202f"]
+
+[node name="Node3D" type="Node3D" unique_id=710872098]
+
+[node name="MotherboardMap" parent="." unique_id=1159040073 instance=ExtResource("1_a202f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6670923, 0, -0.4468851)

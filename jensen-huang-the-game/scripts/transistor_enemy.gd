@@ -91,9 +91,11 @@ var _nav_agent: NavigationAgent3D = null
 var _spawn_transform: Transform3D
 var _gravity: float = 9.8
 var _dead: bool = false
+var _hum: AudioStreamPlayer3D = null
 
 
 func _ready() -> void:
+	_hum = GameAudio.loop_on(self, "enemy_hum", -14.0)
 	add_to_group(&"enemies")
 	health = max_health
 	_spawn_transform = global_transform
@@ -164,6 +166,8 @@ func _die() -> void:
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
 	died.emit()
+	if _hum: _hum.stop()
+	GameAudio.sfx(self, "enemy_pop", global_position, 0.0)
 	if death_despawn_delay >= 0.0:
 		await get_tree().create_timer(death_despawn_delay).timeout
 		if is_instance_valid(self):
