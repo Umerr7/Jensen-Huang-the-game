@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dpqjvpddr3hl5" path="res://enemies/charger_enemy/charger_enemy.tscn" id="7_5vw27"]
 [ext_resource type="PackedScene" uid="uid://cep34bk3wsywe" path="res://enemies/dip_enemy/dip_enemy.tscn" id="8_kek77"]
 [ext_resource type="PackedScene" path="res://alice_npc.tscn" id="9_alice"]
+[ext_resource type="PackedScene" path="res://ui/intro_video.tscn" id="10_intro"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -147,3 +148,5 @@ transform = Transform3D(0.78198177, 0, 0.6233013, 0, 1, 0, -0.6233013, 0, 0.7819
 
 [node name="DipEnemy2" parent="." unique_id=47132160 instance=ExtResource("8_kek77")]
 transform = Transform3D(0.65111125, 0, 0.75898224, 0, 1, 0, -0.75898224, 0, 0.65111125, -73.29578, 0.7271363, 126.118996)
+
+[node name="IntroVideo" parent="." instance=ExtResource("10_intro")]

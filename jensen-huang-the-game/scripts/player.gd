@@ -66,8 +66,6 @@ var _fire_cooldown_left : float = 0.0
 var _dead : bool = false
 var _step_timer : float = 0.0
 var _air_time : float = 0.0
-## Play the wake-up gasp when the level starts.
-@export var play_wake_sound : bool = true
 ## True while Alice's chat box is open: no mouse capture, no shooting.
 var in_dialogue : bool = false
 var _invincible_left : float = 0.0
@@ -89,11 +87,9 @@ func _ready() -> void:
 	_sprint_allowed = can_sprint
 	_apply_weapon_state()
 	can_jump = false
-	# Sound: level music + board hum, and Jensen waking up in the exile.
+	# Sound: level music + board hum.
 	GameAudio.music(self, "gameplay")
 	GameAudio.ambience(self)
-	if play_wake_sound:
-		GameAudio.sfx(self, "wake_gasp", null, -4.0, 1.0, 0.0)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if in_dialogue:

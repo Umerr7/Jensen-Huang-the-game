@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://kygdgt0h653g" path="res://models/jensen.glb" id="2_bkoda"]
 [ext_resource type="PackedScene" uid="uid://cwvhwcgjxy8hv" path="res://models/plasmapulse-blaster---iota/source/ppb-X.glb" id="3_tqo1j"]
 [ext_resource type="PackedScene" path="res://ui/lives_hud.tscn" id="30_hud"]
+[ext_resource type="PackedScene" path="res://ui/objective_banner.tscn" id="31_obj"]
 [ext_resource type="AnimationLibrary" uid="uid://qohfbrp7o1qv" path="res://animations/Backflip.fbx" id="4_f7bie"]
 [ext_resource type="AnimationLibrary" uid="uid://i7hwbc2ofu8" path="res://animations/Firing Rifle.fbx" id="5_y1g78"]
 [ext_resource type="AnimationLibrary" uid="uid://b7orqlyl7nrja" path="res://animations/Firing Rifle 2.fbx" id="6_su4v2"]
@@ -472,5 +473,7 @@ libraries/jogging = SubResource("AnimationLibrary_3k1lv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22115943, 1.0108228, 0.26855588)
 
 [node name="LivesHUD" parent="." instance=ExtResource("30_hud")]
+
+[node name="ObjectiveBanner" parent="." instance=ExtResource("31_obj")]
 
 [editable path="jensen"]

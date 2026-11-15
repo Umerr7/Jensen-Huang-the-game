@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/objective_banner.gd" id="1_obj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_banner"]
+content_margin_left = 28.0
+content_margin_top = 10.0
+content_margin_right = 28.0
+content_margin_bottom = 10.0
+bg_color = Color(0.02, 0.05, 0.03, 0.82)
+border_width_top = 2
+border_width_bottom = 2
+border_color = Color(0.46, 0.73, 0.0, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="ObjectiveBanner" type="CanvasLayer"]
+layer = 4
+script = ExtResource("1_obj")
+
+[node name="Banner" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -420.0
+offset_top = 84.0
+offset_right = 420.0
+offset_bottom = 134.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_banner")
+
+[node name="Label" type="Label" parent="Banner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.95, 0.12, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 26
+text = "REACH THE SERVER ROOM TO DESTROY THE CHINESE MODEL"
+horizontal_alignment = 1
