@@ -4,7 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://kygdgt0h653g" path="res://models/jensen.glb" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cvufu13da3c5y" path="res://jensen-player.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" path="res://weapon_pickup.tscn" id="5_pick"]
-[ext_resource type="PackedScene" uid="uid://dnu7kbgskl7q8" path="res://motherboard_map.scn" id="6_7mycd"]
+[ext_resource type="PackedScene" path="res://motherboard_map.scn" id="6_7mycd"]
+[ext_resource type="PackedScene" path="res://TransistorEnemy/transistor_enemy.tscn" id="6_272bh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -63,7 +64,7 @@ transform = Transform3D(-9.15, 0, 8.742278e-08, 0, 4.9, 0, -7.9991844e-07, 0, -1
 transform = Transform3D(-9.15, 0, 8.742278e-08, 0, 4.9, 0, -7.9991844e-07, 0, -1, 5, 3, -13)
 
 [node name="alice" parent="." unique_id=1284997488 instance=ExtResource("2_1bvp3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.605299, 0.46780288, -1.1629429)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.1556969, 1.4009153, 129.87714)
 
 [node name="jensen" parent="." unique_id=254997866 instance=ExtResource("3_lquwl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.360569, 0.5, -1.0576499)
@@ -110,3 +111,9 @@ height = 0.74853516
 
 [node name="MotherboardMap" parent="." unique_id=1159040073 instance=ExtResource("6_7mycd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.8303, -0.22819328, 155.0408)
+
+[node name="TransistorEnemy" parent="." unique_id=454747917 instance=ExtResource("6_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.35459, 0.01683861, 133.17218)
+
+[node name="TransistorEnemy2" parent="." unique_id=974121038 instance=ExtResource("6_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.56956, 0.01683861, 145.6531)

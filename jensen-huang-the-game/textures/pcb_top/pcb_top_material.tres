@@ -1,0 +1,23 @@
+[gd_resource type="ORMMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://textures/pcb_top/pcb_top_albedo.png" id="1_alb"]
+[ext_resource type="Texture2D" path="res://textures/pcb_top/pcb_top_orm.png" id="2_orm"]
+[ext_resource type="Texture2D" path="res://textures/pcb_top/pcb_top_normal.png" id="3_nrm"]
+[ext_resource type="Texture2D" path="res://textures/pcb_top/pcb_top_emission.png" id="4_emi"]
+
+[resource]
+resource_name = "pcb_top"
+albedo_texture = ExtResource("1_alb")
+orm_texture = ExtResource("2_orm")
+normal_enabled = true
+normal_scale = 1.2
+normal_texture = ExtResource("3_nrm")
+emission_enabled = true
+emission = Color(1, 0.8, 0.45, 1)
+emission_energy_multiplier = 0.5
+emission_operator = 1
+emission_texture = ExtResource("4_emi")
+uv1_scale = Vector3(0.017857, 0.031994, 0.031994)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5
