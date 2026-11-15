@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://kygdgt0h653g" path="res://models/jensen.glb" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cvufu13da3c5y" path="res://jensen-player.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" path="res://weapon_pickup.tscn" id="5_pick"]
-[ext_resource type="PackedScene" path="res://motherboard_map.scn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://b8lpeulobih3t" path="res://motherboard_map.scn" id="6_7mycd"]
 [ext_resource type="PackedScene" path="res://TransistorEnemy/transistor_enemy.tscn" id="6_272bh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
