@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cep34bk3wsywe" path="res://enemies/dip_enemy/dip_enemy.tscn" id="8_kek77"]
 [ext_resource type="PackedScene" path="res://alice_npc.tscn" id="9_alice"]
 [ext_resource type="PackedScene" path="res://ui/intro_video.tscn" id="10_intro"]
+[ext_resource type="Script" uid="uid://gq3i0goof3mn" path="res://scripts/map_batcher.gd" id="11_batch"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -28,14 +29,14 @@ environment = SubResource("Environment_1bvp3")
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1241159320]
 
 [node name="Alice" parent="." unique_id=1284997488 instance=ExtResource("9_alice")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.030285597, 1.3400711, 129.7486)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.81945276, 1.2837566, 130.00351)
 max_messages = 4
 death_linger = 1.0
 talk_radius = 12.0
 opening_line = "surprised to see me arent you? you thought you'd find a chinese AI model. "
 
 [node name="Player" parent="." unique_id=786945605 instance=ExtResource("4_7mycd")]
-transform = Transform3D(-5.0064727e-08, 0, 1.1453475, 0, 1.1453475, 0, -1.1453475, 0, -5.0064727e-08, -92.741875, 0.8333123, 142.02335)
+transform = Transform3D(-5.0064727e-08, 0, 1.1453475, 0, 1.1453475, 0, -1.1453475, 0, -5.0064727e-08, -93.04298, 0.8602071, 142.02335)
 can_freefly = true
 
 [node name="WeaponPickup" parent="." unique_id=1979915436 instance=ExtResource("5_pick")]
@@ -45,7 +46,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -97.576256, 1.1053102, 139.94
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.373108, 0, 39.873947)
 
 [node name="MotherboardMap" parent="." unique_id=1159040073 instance=ExtResource("6_7mycd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.8303, -0.22819328, 155.0408)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.95927, -0.02957344, 154.98538)
 
 [node name="TransistorEnemy" parent="." unique_id=454747917 instance=ExtResource("6_272bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.35459, 0.01683861, 133.17218)
@@ -78,3 +79,6 @@ transform = Transform3D(0.78198177, 0, 0.6233013, 0, 1, 0, -0.6233013, 0, 0.7819
 transform = Transform3D(0.65111125, 0, 0.75898224, 0, 1, 0, -0.75898224, 0, 0.65111125, -73.29578, 0.7271363, 126.118996)
 
 [node name="IntroVideo" parent="." unique_id=507894884 instance=ExtResource("10_intro")]
+
+[node name="MapBatcher" type="Node" parent="." unique_id=511306779]
+script = ExtResource("11_batch")

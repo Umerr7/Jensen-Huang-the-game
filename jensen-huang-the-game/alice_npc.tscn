@@ -36,6 +36,7 @@ shape = SubResource("SphereShape3D_talk")
 
 [node name="GemmaClient" type="Node" parent="."]
 script = ExtResource("3_gemma")
+proxy_url = "https://haven-alice.mohammadumerfarooq777.workers.dev/"
 
 [node name="AliceDialogue" parent="." instance=ExtResource("4_ui")]
 visible = false

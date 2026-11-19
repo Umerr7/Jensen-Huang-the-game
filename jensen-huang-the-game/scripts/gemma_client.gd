@@ -6,7 +6,11 @@
 # `contents` is the chat history in Gemini format:
 #   [{"role": "user", "parts": [{"text": "..."}]}, {"role": "model", "parts": [...]}, ...]
 #
-# The API key is read (first one found wins) from:
+# Two ways to reach Google:
+#   * proxy_url set (the normal way): requests go to our Cloudflare Worker
+#     (cloudflare-worker/worker.js), which adds the key. The game ships NO key.
+#   * proxy_url empty: the game calls Google directly with its own key,
+#     read (first one found wins) from:
 #   1. the GEMMA_API_KEY environment variable
 #   2. res://secrets/gemma_api_key.txt   (git-ignored, never commit it)
 #   3. user://gemma_api_key.txt
@@ -14,6 +18,10 @@ class_name GemmaClient
 extends Node
 
 const ENDPOINT := "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent"
+
+## Our Cloudflare Worker, e.g. "https://haven-alice.yourname.workers.dev".
+## When set, no API key is needed (or shipped) at all.
+@export var proxy_url : String = ""
 
 ## Main model. Gemini 3.5 Flash-Lite answers in ~2 s (Gemma 4 took 10-30 s).
 ## To go back to Gemma: model "gemma-4-26b-a4b-it", fallback "gemma-4-31b-it",
@@ -35,10 +43,15 @@ const ENDPOINT := "https://generativelanguage.googleapis.com/v1beta/models/%s:ge
 ## Thinking eats into this budget too, so keep it generous.
 @export var max_output_tokens : int = 1024
 
+## Sent when running outside a browser, so a website-restricted key still works in the editor.
+@export var editor_referer : String = "https://html-classic.itch.zone/"
+
 var _api_key : String = ""
 
 
 func _ready() -> void:
+	if proxy_url != "":
+		return                   # the Worker holds the key
 	_api_key = load_api_key()
 	if _api_key == "":
 		push_warning("GemmaClient: no API key found (see top of gemma_client.gd). Alice will use offline lines.")
@@ -57,7 +70,7 @@ static func load_api_key() -> String:
 
 
 func has_key() -> bool:
-	return _api_key != ""
+	return proxy_url != "" or _api_key != ""
 
 
 ## Asks Gemma and returns the FIRST good answer.
@@ -106,6 +119,9 @@ func _racer(model_name: String, system_text: String, contents: Array, race: Dict
 func _request(model_name: String, system_text: String, contents: Array, timeout: float) -> Dictionary:
 	var http := HTTPRequest.new()
 	http.timeout = timeout
+	# In a browser the reply arrives already decompressed; letting Godot try to
+	# gunzip it again fails with "network result 8" (this broke Alice on itch.io).
+	http.accept_gzip = not OS.has_feature("web")
 	add_child(http)
 	var body := {
 		"systemInstruction": {"parts": [{"text": system_text}]},
@@ -116,8 +132,18 @@ func _request(model_name: String, system_text: String, contents: Array, timeout:
 		body.generationConfig["responseMimeType"] = "application/json"
 	if thinking_level != "":
 		body.generationConfig["thinkingConfig"] = {"thinkingLevel": thinking_level}
-	var headers := ["Content-Type: application/json", "x-goog-api-key: " + _api_key]
-	var err := http.request(ENDPOINT % model_name, headers, HTTPClient.METHOD_POST, JSON.stringify(body))
+	var url := ENDPOINT % model_name
+	var headers := ["Content-Type: application/json"]
+	if proxy_url != "":
+		url = proxy_url
+		body["model"] = model_name       # the Worker picks the Google model from this
+	else:
+		headers.append("x-goog-api-key: " + _api_key)
+	if proxy_url == "" and not OS.has_feature("web"):
+		# The shipped key only accepts requests from itch.io. Browsers send that
+		# automatically; editor/desktop runs don't, so say it here for local testing.
+		headers.append("Referer: " + editor_referer)
+	var err := http.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(body))
 	if err != OK:
 		http.queue_free()
 		return {"ok": false, "text": "", "error": "request() error %d" % err}
