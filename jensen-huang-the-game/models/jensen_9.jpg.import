@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://beoxvw6488kpw"
-path.s3tc="res://.godot/imported/jensen_17.jpg-595329286744a18e5e85b92e1b905332.s3tc.ctex"
+uid="uid://b8j6wyw5cxksq"
+path.s3tc="res://.godot/imported/jensen_9.jpg-ab2532cd9217cda96f9b0bed2fce7ba2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "71b73126b601c3b7eb24c13556c324a6"
+"md5": "66ff5971aa7f2c30ed406e8671dcfaa5"
 }
 
 [deps]
 
-source_file="res://models/misc/jensen_17.jpg"
-dest_files=["res://.godot/imported/jensen_17.jpg-595329286744a18e5e85b92e1b905332.s3tc.ctex"]
+source_file="res://models/jensen_9.jpg"
+dest_files=["res://.godot/imported/jensen_9.jpg-ab2532cd9217cda96f9b0bed2fce7ba2.s3tc.ctex"]
 
 [params]
 
@@ -40,5 +40,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=512
 detect_3d/compress_to=0

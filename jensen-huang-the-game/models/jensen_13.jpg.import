@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bduu7nyt6b1t0"
-path.s3tc="res://.godot/imported/jensen_6.jpg-511493f14153e2875aa63074d0b1edcf.s3tc.ctex"
+uid="uid://jmapk8g8kdsg"
+path.s3tc="res://.godot/imported/jensen_13.jpg-a9e3a3a5ccb91724d2bae3ae06b1e5f2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "751a01fc4191b165bec86a463b56150e"
+"md5": "5f6aadbb37dab64ba61c6448fe254c52"
 }
 
 [deps]
 
-source_file="res://models/misc/jensen_6.jpg"
-dest_files=["res://.godot/imported/jensen_6.jpg-511493f14153e2875aa63074d0b1edcf.s3tc.ctex"]
+source_file="res://models/jensen_13.jpg"
+dest_files=["res://.godot/imported/jensen_13.jpg-a9e3a3a5ccb91724d2bae3ae06b1e5f2.s3tc.ctex"]
 
 [params]
 
@@ -25,12 +25,12 @@ compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=1
+roughness/src_normal="res://models/jensen_13.jpg"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
@@ -40,5 +40,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=512
 detect_3d/compress_to=0

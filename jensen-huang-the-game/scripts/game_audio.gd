@@ -37,7 +37,7 @@ const SOUNDS := {
 
 const MUSIC := {
 	"gameplay": "res://audio/Music/music_loop.ogg",
-	"alice": "res://audio/Music/The Lily of steel.mp3",   # the confrontation + endings
+	"alice": "res://audio/Music/The Lily of steel.ogg",   # the confrontation + endings
 	"board_hum": "res://audio/Ambience/board_hum_loop.ogg",
 }
 
