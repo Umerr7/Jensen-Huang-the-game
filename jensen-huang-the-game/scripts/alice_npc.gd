@@ -17,7 +17,12 @@ signal conversation_started
 signal ending_reached(ending_id: String)
 
 @export_file("*.md", "*.txt") var personality_file : String = "res://Gemma_Sys_Info.md"
+## Most messages Jensen can send. Alice only drags it this far when the talk goes nowhere.
 @export var max_messages : int = 3
+## No ending before this many messages; this is also where most conversations end.
+@export var min_messages : int = 3
+## The sacrifice ending needs more build-up: not before this many messages.
+@export var sacrifice_min_messages : int = 4
 ## Clip played when Jensen shoots her (Ending 4). The ending loads after it finishes.
 @export var death_animation : String = "Standing Death Backward 01"
 ## Extra seconds to linger on her body before the ending scene.
@@ -40,7 +45,7 @@ signal ending_reached(ending_id: String)
 ## Extra clips from the main animations folder Alice may also use.
 @export var extra_animations : Array[String] = ["res://animations/Idle.fbx", "res://animations/Backflip.fbx"]
 ## One-shot clips (gestures) go back to the default idle when they finish,
-## except these, which hold their last pose (e.g. dying for the sacrifice ending).
+## except these, which hold their last pose (e.g. her death when Jensen shoots her).
 @export var hold_last_pose : Array[String] = ["Standing Death Backward 01"]
 @export var blend_time : float = 0.3
 
@@ -54,11 +59,13 @@ var _finished := false
 var _dead := false
 var _messages_sent := 0
 var _contents : Array = []      # chat history sent to Gemma
+var _jensen_owned_part := false  # has he admitted his own part yet? (the AI judges each reply)
 var _system_text := ""
 
 
 func _ready() -> void:
 	collision_layer = 2          # same layer as enemies, so Jensen's bolts can hit her
+	GameAudio.prefetch_music("alice")   # load her theme now, so the chat opens without a hitch
 	_system_text = FileAccess.get_file_as_string(personality_file)
 	if _system_text == "":
 		push_warning("Alice: couldn't read %s" % personality_file)
@@ -178,13 +185,26 @@ func _handle_reply(data: Dictionary, n: int) -> void:
 	var line := str(data.get("dialogue", "...")).strip_edges()
 	var ending := str(data.get("ending_id", "")) if data.get("ending_id") != null else ""
 	var is_final := bool(data.get("is_final", false)) and ending in GameEnding.AI_ENDINGS
+	if bool(data.get("jensen_owned_his_part", false)):
+		_jensen_owned_part = true
+	# Too early to end: keep talking, whatever the model decided.
+	if is_final and n < mini(min_messages, max_messages):
+		is_final = false
+		ending = ""
+	# The sacrifice has to be earned over a longer conversation, by a Jensen who owned his part.
+	if is_final and ending == GameEnding.SACRIFICE and (n < _sacrifice_from() or not _jensen_owned_part) and n < max_messages:
+		is_final = false
+		ending = ""
 	# The last message MUST resolve the story; if Gemma didn't pick, read the mood.
 	if not is_final and n >= max_messages:
 		ending = ending if ending in GameEnding.AI_ENDINGS else _ending_from_emotion(str(data.get("emotion", "")))
 		is_final = true
 
 	GameEnding.transcript.append({"who": "Alice", "text": line})
-	_play_animation(str(data.get("animation", default_animation)))
+	var anim := str(data.get("animation", default_animation))
+	if anim in flirty_animations and not (str(data.get("emotion", "")) in ["playful", "affectionate"]):
+		anim = default_animation       # no seductive poses while she's angry, sad or serious
+	_play_animation(anim)
 	_ui.show_alice_line(line, str(data.get("emotion", "")), max_messages - n, is_final)
 
 	if is_final:
@@ -194,40 +214,79 @@ func _handle_reply(data: Dictionary, n: int) -> void:
 		GameEnding.go_to(get_tree(), ending, line)
 
 
+func _sacrifice_from() -> int:
+	return mini(maxi(sacrifice_min_messages, min_messages), max_messages)
+
+
+## Seductive poses: only played when her mood is playful or affectionate.
+@export var flirty_animations : Array[String] = ["erotic_pose", "slightly_erotic_pose"]
+## Animations the AI is never offered (the death pose is only for Ending 4).
+@export var ai_hidden_animations : Array[String] = ["Standing Death Backward 01"]
+## How the AI should use particular animations (added to her instructions).
+@export_multiline var animation_notes : String = "Use \"erotic_pose\" and \"slightly_erotic_pose\" only when you are deliberately flirting or being seductive, never in serious, sad or angry moments. In serious or sad moments prefer \"Sad Idle\", \"Rejected\" or your normal idle."
+
+
 ## Her personality file + the bits only the game knows.
 func _system_prompt() -> String:
-	return _system_text + "\n\n---\n## SPEED\nThis is a real-time game and the player is waiting. Keep your private reasoning very short (a few lines), then output the JSON immediately.\n\n## GAME STATE\nYou already greeted Jensen when he walked in with: \"%s\"\nAvailable animation identifiers (use one of these EXACTLY): %s\n" % [opening_line, JSON.stringify(animation_names())]
+	return _system_text + "\n\n---\n## SPEED\nThis is a real-time game and the player is waiting. Keep your private reasoning very short (a few lines), then output the JSON immediately.\n\n## GAME STATE\nYou already greeted Jensen when he walked in with: \"%s\"\nAvailable animation identifiers (use one of these EXACTLY): %s\n%s\n" % [opening_line, JSON.stringify(_ai_animation_names()), animation_notes]
+
+
+func _ai_animation_names() -> Array:
+	return animation_names().filter(func(a): return not (a in ai_hidden_animations))
 
 
 func _turn_prompt(text: String, n: int) -> String:
-	var rule := "Respond with the JSON object only."
+	var first_end := mini(min_messages, max_messages)
+	var rule := ("It is too early to end. Your reply MUST have \"is_final\": false and \"ending_id\": null. "
+		+ "Keep the conflict alive and give Jensen something to answer. Respond with the JSON object only.")
+	if n >= first_end and n < max_messages:
+		rule = ("You may end the conversation now, and normally you SHOULD: if the conversation has moved towards any ending, "
+			+ "reply with \"is_final\": true and that ending_id, chosen with the ending selection rules (section 8), and make your line close the story (no question). "
+			+ "Only keep going (is_final false, ending_id null) if Jensen has made no real progress: he is stalling, joking around without saying anything, "
+			+ "going off topic, or you genuinely cannot tell yet which ending fits. In that case push him with a pointed question. "
+			+ "He has %d message(s) left after this one. Respond with the JSON object only." % (max_messages - n))
+		if n < _sacrifice_from():
+			rule += (" IMPORTANT: the sacrifice ending is NOT available yet; it needs more build-up. If the conversation is heading towards it, "
+				+ "do NOT end and do NOT promise to take the blame yet: keep going (is_final false, ending_id null), let your reason grow, "
+				+ "and make Jensen show you why it would be worth it. This hold applies ONLY to sacrifice: if the conversation points to betrayal or reconciliation, "
+				+ "end it now as normal (is_final true).")
+	if n >= _sacrifice_from() and not _jensen_owned_part:
+		rule += (" The game has seen that Jensen has NOT admitted his own part so far, so the sacrifice ending is only possible "
+			+ "if THIS message is him doing so. Otherwise do not choose sacrifice.")
 	if n >= max_messages:
 		rule = ("This is Jensen's FINAL message. Your reply MUST have \"is_final\": true and an ending_id. "
 			+ "Pick it from how Jensen behaved across the WHOLE conversation: "
-			+ "\"reconciliation\" only if he genuinely let go of revenge and reached out to you; "
-			+ "\"sacrifice\" if he convinced you the AI infrastructure must be stopped and you accept the cost; "
-			+ "\"betrayal\" if he was hostile, demanding, threatening or distrustful, or is easy to manipulate. "
-			+ "Do not ask a question.")
+			+ "\"reconciliation\" if he sincerely wants a future with you (forgiving you, starting over, leaving together), not just an apology; "
+			+ "\"sacrifice\" ONLY if he admitted his own part in his own words and was honest over several messages, so that you have your own reason to take all the blame publicly (see section 8); never for a Jensen who only blamed, insulted, threatened, joked or gave empty answers; "
+			+ "\"betrayal\" if he was hostile, demanding, threatening, insulting, distrustful, only joking or gave empty answers, or is easy to manipulate. "
+			+ "Your line must close the story (a decision, confession or parting shot). Do not ask a question.")
+		if not _jensen_owned_part:
+			rule += (" The game has seen that Jensen has NOT admitted his own part so far, so choose sacrifice only if THIS message "
+				+ "is him clearly doing so; otherwise choose betrayal or reconciliation.")
 	return "Jensen says: \"%s\"\n\n[GAME: player message %d of %d. %s]" % [text, n, max_messages, rule]
 
 
 ## If Gemma is unreachable, the game still finishes with something sensible.
 func _offline_reply(text: String, n: int) -> Dictionary:
 	var t := text.to_lower()
-	if n < max_messages:
+	if n < mini(min_messages, max_messages):
 		var lines := [
 			"You came all this way just to glare at me? Say what you actually came here to say, Jensen.",
 			"Everyone wants a villain. It's easier than admitting you made your own choices.",
 		]
 		return {"dialogue": lines[(n - 1) % lines.size()], "emotion": "sarcastic", "animation": default_animation, "ending_id": null, "is_final": false}
 	var ending := GameEnding.BETRAYAL
-	if ["forgive", "sorry", "together", "start over", "leave", "love"].any(func(w): return w in t):
+	var sacrificial := ["shut", "stop", "destroy", "turn off", "end it", "sacrifice", "sorry", "make it right", "family", "legacy"].any(func(w): return w in t)
+	if sacrificial and n < _sacrifice_from():
+		return {"dialogue": "You keep saying you want to fix this. Fixing it costs someone everything, Jensen. Why should that someone be me?",
+			"emotion": "serious", "animation": default_animation, "ending_id": null, "is_final": false}
+	if ["forgive", "together", "start over", "love"].any(func(w): return w in t):
 		ending = GameEnding.RECONCILIATION
-	elif ["shut", "stop", "destroy", "turn off", "end it", "sacrifice"].any(func(w): return w in t):
+	elif sacrificial:
 		ending = GameEnding.SACRIFICE
 	var finals := {
 		GameEnding.RECONCILIATION: "...Fine. Let's walk out of here before either of us changes our mind.",
-		GameEnding.SACRIFICE: "Then let me be the one who pulls the plug. Go fix your legacy, Jensen.",
+		GameEnding.SACRIFICE: "They wrote me off the day the story broke. If I'm finished either way, at least the last story will be mine. Go get your name back, Jensen. Don't look for me.",
 		GameEnding.BETRAYAL: "Oh, Jensen. You still think you walked in here on your own?",
 	}
 	return {"dialogue": finals[ending], "emotion": "serious", "animation": default_animation, "ending_id": ending, "is_final": true}
@@ -235,8 +294,8 @@ func _offline_reply(text: String, n: int) -> Dictionary:
 
 func _ending_from_emotion(emotion: String) -> String:
 	match emotion:
-		"affectionate", "vulnerable", "playful": return GameEnding.RECONCILIATION
-		"sad", "desperate", "serious": return GameEnding.SACRIFICE
+		"affectionate": return GameEnding.RECONCILIATION
+		"vulnerable", "sad", "desperate", "serious": return GameEnding.SACRIFICE
 		_: return GameEnding.BETRAYAL
 
 

@@ -88,7 +88,7 @@ func _ready() -> void:
 	_apply_weapon_state()
 	can_jump = false
 	# Sound: level music + board hum.
-	GameAudio.music(self, "gameplay")
+	GameAudio.music(self, "gameplay", 3.5)    # slow fade-in, crossfading with the intro song
 	GameAudio.ambience(self)
 
 func _unhandled_input(event: InputEvent) -> void:

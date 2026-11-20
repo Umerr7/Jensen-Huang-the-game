@@ -5,6 +5,12 @@
 extends CanvasLayer
 
 @export var video : VideoStream = preload("res://video/intro.ogv")
+## Music played over the intro (the video itself has no sound). Empty = silent.
+@export var song : AudioStream
+## Song volume in dB.
+@export var song_volume_db : float = -6.0
+## Seconds the song takes to fade out when the intro ends or is skipped.
+@export var song_fade_out : float = 1.6
 ## Seconds before skipping is allowed (stops an accidental instant skip).
 @export var skip_delay : float = 0.6
 
@@ -14,6 +20,7 @@ static var played := false
 @onready var _hint : Label = $SkipHint
 var _age := 0.0
 var _ending := false
+var _song_player : AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -26,6 +33,13 @@ func _ready() -> void:
 	_player.stream = video
 	_player.finished.connect(_finish)
 	_player.play()
+	if song:
+		_song_player = AudioStreamPlayer.new()
+		_song_player.stream = song
+		_song_player.volume_db = song_volume_db
+		_song_player.bus = &"Music"
+		add_child(_song_player)
+		_song_player.play()
 
 
 func _process(delta: float) -> void:
@@ -51,6 +65,8 @@ func _finish() -> void:
 	get_tree().paused = false
 	var tw := create_tween()
 	tw.tween_property($Fade, "color:a", 0.0, 0.6).from(1.0)
+	if _song_player:                           # fade the song out with the picture
+		tw.parallel().tween_property(_song_player, "volume_db", -60.0, song_fade_out)
 	_player.visible = false
 	_hint.visible = false
 	tw.tween_callback(queue_free)

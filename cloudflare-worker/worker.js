@@ -6,11 +6,20 @@
 //
 // Setup: paste this file into a Worker, then add a SECRET named GEMINI_API_KEY.
 //
+// Backup models: Google's free tier allows 15 requests per minute PER MODEL.
+// When the requested model is over its limit (HTTP 429) or overloaded
+// (500/503), the Worker retries the same request on the next backup model,
+// which has its own separate limit. The game doesn't need to know.
+//
 // Abuse limits (anyone can find this URL in the game, so it only does exactly
 // what Alice needs): allowed models only, short conversations only, capped
 // reply length, and browsers are only accepted from itch.io and localhost.
 
 const ALLOWED_MODELS = ["gemini-3.5-flash-lite", "gemini-flash-lite-latest"];
+// Tried in order when the requested model is busy. 2.5 is only served to
+// projects that already used it, so it may answer 403/404: that's skipped too.
+const FALLBACK_MODELS = ["gemini-3.1-flash-lite", "gemini-2.5-flash-lite"];
+const RETRY_STATUSES = [429, 500, 503];
 const MAX_TURNS = 12;               // Alice's chat is ~8 messages at most
 const MAX_REQUEST_CHARS = 40000;    // personality file (~12k) + the chat
 const MAX_OUTPUT_TOKENS = 1024;
@@ -67,14 +76,38 @@ export default {
     const body = { contents: req.contents, generationConfig: gen };
     if (req.systemInstruction) body.systemInstruction = req.systemInstruction;
 
-    const google = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
-        body: JSON.stringify(body),
+    const models = [model, ...FALLBACK_MODELS.filter((m) => m !== model)];
+    let first = null;
+    for (let i = 0; i < models.length; i++) {
+      const isBackup = i > 0;
+      let res = await callGoogle(models[i], body, env.GEMINI_API_KEY);
+      // Older models don't all accept the same thinking settings: retry without them.
+      if (res.status === 400 && body.generationConfig.thinkingConfig && /thinking/i.test(res.text)) {
+        const plain = { ...body, generationConfig: { ...body.generationConfig } };
+        delete plain.generationConfig.thinkingConfig;
+        res = await callGoogle(models[i], plain, env.GEMINI_API_KEY);
       }
-    );
-    return reply(google.status, await google.text(), origin);
+      if (!first) first = res;
+      const busy = RETRY_STATUSES.includes(res.status);
+      const unavailable = isBackup && [400, 403, 404].includes(res.status);   // backup not usable here
+      if (!busy && !unavailable) {
+        const r = reply(res.status, res.text, origin);
+        r.headers.set("X-Model-Used", models[i]);
+        return r;
+      }
+    }
+    return reply(first.status, first.text, origin);   // every model busy: pass on the main model's refusal (e.g. 429, so the game backs off)
   },
 };
+
+async function callGoogle(model, body, key) {
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+      body: JSON.stringify(body),
+    }
+  );
+  return { status: res.status, text: await res.text() };
+}

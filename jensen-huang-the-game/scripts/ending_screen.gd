@@ -1,7 +1,8 @@
 # Placeholder ending screen: a title, a short epilogue, Alice's last line,
-# and Play again / Quit. One scene per ending (endings/*.tscn) sets the text.
-# No ending number or ending name is shown, so players can't tell how many
-# endings exist or which one they got.
+# and a Play again button. One scene per ending (endings/*.tscn) sets the text.
+# From the second playthrough on, the bottom-right corner counts how many
+# different endings the player has reached (no total, so they can't tell how
+# many there are).
 extends Control
 
 @export var title : String = "The Unexpected Comeback"
@@ -21,7 +22,22 @@ func _ready() -> void:
 	%Replay.pressed.connect(func():
 		GameAudio.sfx(self, "ui_click", null, -4.0)
 		get_tree().change_scene_to_file.call_deferred(replay_scene))
-	%Quit.pressed.connect(func(): get_tree().quit())
+	_add_endings_counter()
 	# fade in
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, 1.2)
+
+
+func _add_endings_counter() -> void:
+	if GameEnding.playthroughs() < 2:
+		return                     # first playthrough: keep the mystery
+	var label := Label.new()
+	label.name = "EndingsReached"
+	label.text = "Endings reached: %d" % GameEnding.reached_count()
+	label.add_theme_font_size_override("font_size", 16)
+	label.add_theme_color_override("font_color", Color(0.6, 0.66, 0.64))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	add_child(label)
+	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 20)
+	label.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	label.grow_vertical = Control.GROW_DIRECTION_BEGIN

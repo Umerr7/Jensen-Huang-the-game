@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_end")
 title = "The Final Sacrifice"
-epilogue = "Alice realises she has gone too far.\n\nShe shuts down the AI infrastructure from the inside, knowing she won't survive the process. The server room goes dark one rack at a time.\n\nJensen gets his chance to restore his reputation. He loses the one person he came here to confront."
+epilogue = "Alice trades her name for his.\n\nShe tells the world it was all her lie: no spy, no leak, maybe no affair at all. Her career, her dignity and her past go with it.\n\nJensen gets his name back. But Beijing was watching too.\n\nA week later, her apartment in Singapore is empty. No one has heard from her since."
 accent = Color(0.35, 0.65, 1.0, 1)
 
 [node name="Background" type="ColorRect" parent="."]
@@ -77,10 +77,3 @@ custom_minimum_size = Vector2(160, 46)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Play again"
-
-[node name="Quit" type="Button" parent="Center/VBox/Buttons"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 46)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Quit"

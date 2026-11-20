@@ -44,6 +44,8 @@ const MUSIC := {
 static var _music_player : AudioStreamPlayer
 static var _music_key := ""
 static var _ambience_player : AudioStreamPlayer
+static var _music_cache := {}        # key -> loaded AudioStream (kept, so switching back is instant)
+static var _music_requested := {}    # key -> true while loading in the background
 
 
 ## One-shot sound. `at` = world position for a 3D sound, or null for a flat one.
@@ -107,7 +109,7 @@ static func music(from: Node, key: String, fade := 1.5, volume_db := 0.0) -> voi
 	var tree := from.get_tree()
 	var old := _music_player
 	var p := AudioStreamPlayer.new()
-	p.stream = load(MUSIC[key])
+	p.stream = _music_stream(key)
 	p.bus = &"Music"
 	p.volume_db = -40.0
 	tree.root.add_child.call_deferred(p)
@@ -122,6 +124,26 @@ static func music(from: Node, key: String, fade := 1.5, volume_db := 0.0) -> voi
 		var tw := tree.create_tween()
 		tw.tween_property(old, "volume_db", -40.0, fade)
 		tw.tween_callback(old.queue_free)
+
+
+## Starts loading a track in the background, so a later music(key) doesn't
+## freeze the game while it loads (in a browser that freeze was very visible
+## when Alice's chat opened). Call it early, e.g. when the level starts.
+static func prefetch_music(key: String) -> void:
+	if _music_cache.has(key) or _music_requested.has(key):
+		return
+	if ResourceLoader.load_threaded_request(MUSIC[key]) == OK:
+		_music_requested[key] = true
+
+
+static func _music_stream(key: String) -> AudioStream:
+	if not _music_cache.has(key):
+		if _music_requested.has(key):
+			_music_requested.erase(key)
+			_music_cache[key] = ResourceLoader.load_threaded_get(MUSIC[key])   # waits only if not finished yet
+		else:
+			_music_cache[key] = load(MUSIC[key])
+	return _music_cache[key]
 
 
 static func stop_music(from: Node, fade := 1.0) -> void:

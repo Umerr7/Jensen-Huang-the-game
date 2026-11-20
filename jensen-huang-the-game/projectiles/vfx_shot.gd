@@ -57,7 +57,10 @@ func launch_at(target: Vector3, shooter: Node = null, speed_override: float = -1
 
 
 func _on_hit(_at: Vector3, what: Node) -> void:
-	if sound_pitch > 0.0:
+	# Hit sound only when an enemy (or Alice) is hit: not walls, and not Jensen,
+	# who has his own "hurt" sound.
+	var hit_enemy : bool = what != null and what.has_method("take_damage") and not what.is_in_group("player")
+	if sound_pitch > 0.0 and hit_enemy:
 		GameAudio.sfx(self, "laser_hit", _at, -2.0, sound_pitch)
 	if what and what.has_method("take_damage"):
 		what.take_damage(damage)   # enemies lose `damage` health; Jensen loses 1 life whatever the number

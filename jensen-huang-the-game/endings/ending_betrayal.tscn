@@ -77,10 +77,3 @@ custom_minimum_size = Vector2(160, 46)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Play again"
-
-[node name="Quit" type="Button" parent="Center/VBox/Buttons"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 46)
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Quit"

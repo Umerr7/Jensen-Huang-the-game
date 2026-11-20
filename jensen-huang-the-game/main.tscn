@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://alice_npc.tscn" id="9_alice"]
 [ext_resource type="PackedScene" path="res://ui/intro_video.tscn" id="10_intro"]
 [ext_resource type="Script" uid="uid://gq3i0goof3mn" path="res://scripts/map_batcher.gd" id="11_batch"]
+[ext_resource type="Script" uid="uid://uoraugo1jogy" path="res://scripts/shader_warmer.gd" id="12_warm"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0xm2m"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -19,6 +20,7 @@ sky_material = SubResource("ProceduralSkyMaterial_0xm2m")
 
 [sub_resource type="Environment" id="Environment_1bvp3"]
 background_mode = 2
+background_color = Color(4.8732386e-07, 0.19750154, 9.62615e-08, 1)
 sky = SubResource("Sky_h2yge")
 
 [node name="main" type="Node3D" unique_id=1261466814]
@@ -29,11 +31,11 @@ environment = SubResource("Environment_1bvp3")
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1241159320]
 
 [node name="Alice" parent="." unique_id=1284997488 instance=ExtResource("9_alice")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.81945276, 1.2837566, 130.00351)
-max_messages = 4
+transform = Transform3D(-5.5950576e-08, 0, -1.28, 0, 1.28, 0, 1.28, 0, -5.5950576e-08, -2.3298578, 0.77590764, 130.00351)
+max_messages = 5
 death_linger = 1.0
-talk_radius = 12.0
-opening_line = "surprised to see me arent you? you thought you'd find a chinese AI model. "
+talk_radius = 4.8
+opening_line = "Surprised to see me arent you? you thought you'd find a chinese AI model. Instead you found a regular chinese model."
 
 [node name="Player" parent="." unique_id=786945605 instance=ExtResource("4_7mycd")]
 transform = Transform3D(-5.0064727e-08, 0, 1.1453475, 0, 1.1453475, 0, -1.1453475, 0, -5.0064727e-08, -93.04298, 0.8602071, 142.02335)
@@ -82,3 +84,6 @@ transform = Transform3D(0.65111125, 0, 0.75898224, 0, 1, 0, -0.75898224, 0, 0.65
 
 [node name="MapBatcher" type="Node" parent="." unique_id=511306779]
 script = ExtResource("11_batch")
+
+[node name="ShaderWarmer" type="Node" parent="." unique_id=1267470318]
+script = ExtResource("12_warm")

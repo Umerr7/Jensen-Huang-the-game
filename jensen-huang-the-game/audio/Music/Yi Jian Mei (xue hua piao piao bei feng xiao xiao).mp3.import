@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cguld2ha2voji"
+path="res://.godot/imported/Yi Jian Mei (xue hua piao piao bei feng xiao xiao).mp3-98645af9b04f3b9fe6dc0a190f27cf39.mp3str"
+
+[deps]
+
+source_file="res://audio/Music/Yi Jian Mei (xue hua piao piao bei feng xiao xiao).mp3"
+dest_files=["res://.godot/imported/Yi Jian Mei (xue hua piao piao bei feng xiao xiao).mp3-98645af9b04f3b9fe6dc0a190f27cf39.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

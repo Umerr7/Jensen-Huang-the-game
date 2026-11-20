@@ -27,13 +27,17 @@ const ENDPOINT := "https://generativelanguage.googleapis.com/v1beta/models/%s:ge
 ## To go back to Gemma: model "gemma-4-26b-a4b-it", fallback "gemma-4-31b-it",
 ## thinking_level "" and json_mode off (Gemma supports neither).
 @export var model : String = "gemini-3.5-flash-lite"
-## Raced alongside the main model; whichever answers first wins.
-@export var fallback_model : String = "gemini-flash-lite-latest"
+## Optional second model raced alongside the main one; whichever answers first
+## wins. Empty = off. (It doubles API usage, and "gemini-flash-lite-latest" is
+## just another name for gemini-3.5-flash-lite, so racing those gained nothing.)
+@export var fallback_model : String = ""
 ## "minimal" = (almost) no hidden reasoning = fastest. Empty = model default.
 @export var thinking_level : String = "minimal"
 ## Ask the API to return pure JSON (Gemini models only).
 @export var json_mode : bool = true
-@export var timeout_seconds : float = 20.0
+## One request's time limit. Replies normally take 1.5-3.5 s; a request that
+## hangs much longer than that is retried instead of making the player wait.
+@export var timeout_seconds : float = 10.0
 ## Most time one ask() may take, retries included. After that Alice uses an
 ## offline line so the player is never stuck waiting.
 @export var total_budget_seconds : float = 25.0
