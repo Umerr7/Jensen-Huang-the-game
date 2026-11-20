@@ -88,6 +88,6 @@ func _show_text(line: String, emotion: String) -> void:
 func _set_input_enabled(on: bool) -> void:
 	_line_edit.editable = on
 	_send.disabled = not on
-	_line_edit.placeholder_text = "Say something to Alice... (Enter to send)" if on else ""
+	_line_edit.placeholder_text = "Say Something to Alice... (Enter to send)" if on else ""
 	if on:
 		_line_edit.grab_focus.call_deferred()
